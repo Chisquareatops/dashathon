@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.api.types import is_numeric_dtype
 import numpy as np
 import unittest
-import dashathon.dashboard.dash_functions
+import dashathon.dashboard.dash_functions as dash_functions
 
 class TestDashFunctions(unittest.TestCase):
 
