@@ -5,7 +5,7 @@ before_install:
   - "pip install -U pip"
   - "python setup.py install"
 script: python dashathon/tests/test_scraping_methods.py
-python dashathon/tests/test_dash_functions.py
+script: python dashathon/tests/test_dash_functions.py
 branches:
   only:
     - master
