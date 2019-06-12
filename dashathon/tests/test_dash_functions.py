@@ -138,3 +138,11 @@ class TestDashFunctions(unittest.TestCase):
                       '30k', '35k', '40k', 'official_time']
         result = dash_functions.get_fatigue_zone(user_numeric, split_list)
         self.AssertEqual(result, 'half')
+        
+    # test get_overall_pace function on synthetic data and check
+    # for exact expected result
+    def test_get_overall_pace(self):
+        user_splits = ['30:00', '60:00', '90:00', '120:00', np.nan,
+                       '150:00', '180:00', '210:00', '240:00', np.nan]
+        result = dash_functions.get_overall_pace(user_splits)
+        self.AssertEqual(result, 6.0)
