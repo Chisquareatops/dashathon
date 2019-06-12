@@ -9,12 +9,10 @@ SECONDS = 60.0
 def get_subset(df, age, gender):
     """
     This function returns a subset of a data frame based on gender and/or age.
-    Parameters:
-    df (dataframe): a dataframe containing marathon split times for individuals
-    age (string): an age group, originally selcted via user input
-    gender (string): a gender category, originally se3lected via user input
-    Returns:
-    subset (dataframe): a dataframe containing times for selected individuals
+    :param dataframe df: a dataframe containing marathon split times for individuals
+    :param str age: an age group, originally selcted via user input
+    :param str gender: a gender category, originally se3lected via user input
+    :return dataframe subset: a dataframe containing times for selected individuals
     """
     if age == 'all':
         if gender == 'all':
@@ -31,11 +29,9 @@ def get_subset(df, age, gender):
 def get_top(df, quantile):
     """
     This function returns the top X% of runners based on finish time.
-    Parameters:
-    df (dataframe): a dataframe containing marathon split times for individuals
-    quantile (float): a decimal specifying the desired cutoff for performance
-    Returns:
-    subset_winners (dataframe): dataframe containing times for top individuals
+    :param dataframe df: a dataframe containing marathon split times for individuals
+    :param float quantile: a decimal specifying the desired cutoff for performance
+    :return dataframe subset_winners: dataframe containing times for top individuals
     """
     quantile_value = df["overall"].quantile(quantile)
     subset_winners = df.loc[(df["overall"] <= quantile_value)].copy()
@@ -44,10 +40,8 @@ def get_top(df, quantile):
 def get_user_paces(user_splits):
     """
     This function returns paces for a user based on their input split times.
-    Parameters:
-    user_splits (array): an array of strings giving user split times
-    Returns:
-    user_numeric (array): an array of floats giving user paces in minutes/km
+    :param array user_splits: an array of strings giving user split times
+    :return array user_numeric: an array of floats giving user paces in minutes/km
     """
     split_numeric = [5, 10, 15, 20, 21.082, 25, 30, 35, 40, 42.165]
     user_numeric = []
@@ -75,10 +69,8 @@ def get_user_times(user_splits):
     This function returns times for a user based on their input split times.
     It differs from get_user_paces in that it returns total times in seconds,
     not pace in minutes/km.
-    Parameters:
-    user_splits (array): an array of strings giving user split times
-    Returns:
-    user_numeric_time (array): an array of floats giving user times in seconds
+    :param array user_splits: an array of strings giving user split times
+    :return array user_numeric_time: an array of floats giving user times in seconds
     """
     user_numeric_time = []
     for i in range(len(user_splits)):
@@ -103,10 +95,8 @@ def get_user_times(user_splits):
 def get_mean_pace(df, split_list):
     """
     This function returns mean paces at various splits for a group of runners.
-    Parameters:
-    df (dataframe): contains split times for individual runners
-    Returns:
-    mean_paces (array): an array of floats, the mean pace at each split
+    :param dataframe df: contains split times for individual runners
+    :return aray mean_paces: an array of floats, the mean pace at each split
     for the group of runners contained in the dataframe
     """
     split_numeric = [5, 10, 15, 20, 21.082, 25, 30, 35, 40, 42.165]
@@ -121,10 +111,8 @@ def get_split_ratio(df):
     """
     This function returns a copy of a data frame with a new column
     for split ratios.
-    Parameters:
-    df (dataframe): contains split times for individual runners
-    Returns:
-    df_new (dataframe): a copy of the passed data frame which contains one
+    :param dataframe df: contains split times for individual runners
+    :return dataframe df_new: a copy of the passed data frame which contains one
     new column; the split ratio comparing the second half of each individual's
     marathon to the first half.
     """
@@ -137,16 +125,33 @@ def get_split_ratio(df):
 def get_fatigue_zone(user_numeric, split_list):
     """
     This function returns the name of the split at which a user ran slowest.
-    Parameters:
-    user_splits (array): an array of strings giving user split times
-    user_numeric (array): an array of floats giving user paces in min/km
-    Returns:
-    fatigue_zone (string): the name of the split where user's pace slowest
+    :param array user_splits: an array of strings giving user split times
+    :param array user_numeric: an array of floats giving user paces in min/km
+    :return str fatigue_zone: the name of the split where user's pace slowest
     """
+    user_numeric_c = user_numeric.copy()
     for i in range (len(split_list)):
-        if math.isnan(user_numeric[i]):
-            user_numeric[i] = 0
-    slowest_pace = max(user_numeric)
-    slowest_pace_index = user_numeric.index(slowest_pace)
+        if math.isnan(user_numeric_c[i]):
+            user_numeric_c[i] = 0
+    slowest_pace = max(user_numeric_c)
+    slowest_pace_index = user_numeric_c.index(slowest_pace)
     fatigue_zone = split_list[slowest_pace_index]
     return fatigue_zone
+
+def get_overall_pace(user_splits):
+    """
+    This function returns the user's average overall pace based on
+    any entered splits.
+    :param array user_splits: an array of strings giving user split times
+    :return float avg_pace: the average pace of all entered splits
+    """
+    user_paces = get_user_paces(user_splits)
+    user_paces_entered = []
+    try:
+        for i in range (len(user_paces)):
+            if not math.isnan(user_paces[i]):
+                user_paces_entered.append(user_paces[i])
+        avg_pace = sum(user_paces_entered) / len(user_paces_entered)
+        return avg_pace
+    except:
+        return 0
