@@ -16,7 +16,7 @@ EXTERNAL_STYLESHEETS = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
 
 app = dash.Dash(__name__, external_stylesheets=EXTERNAL_STYLESHEETS)
 
-df = pd.read_csv("bostonnycchicago.csv")
+df = pd.read_csv("../data/combined_data/all_marathon_results.csv")
 
 # pull the list of demographic variables from the data itself
 # include 'all' so user can view data without slicing it
@@ -83,6 +83,10 @@ app.layout = html.Div(
             "If you enter half and full marathon times, you will see your split ratio marked below in blue."
         ),
         dcc.Graph(id="split-hist"),
+        html.H6("Your Basic Stats"),
+        html.Table([
+            html.Tr([html.Td(['Your Overall Pace:']), html.Td(id='overall_pace')]),
+        ]),
     ]
 )
 
@@ -122,23 +126,21 @@ def update_graph(
 ):
     """
     This function updates the line graph based on user's demographic selection.
-    Parameters:
-    n_clicks (dash state): introduces pressed-state of submit button to the
+    :param n_clicks dash state: introduces pressed-state of submit button to the
     function; must be passed as input or function will not update.
-    gender_ (dash state): user's selectio in the gender drop-down menu
-    age_ (dash state): user's age group selectio in age drop-down menu
-    user5k (string): user 5k split if entered
-    user10k (string): user 10k split if entered
-    user15k (string): user 15k split if entered
-    user20k (string): user 20k split if entered
-    userhalf (string): user half marathon split if entered
-    user25k (string): user 25k split if entered
-    user30k (string): user 30k split if entered
-    user35k (string): user 35k split if entered
-    user40k (string): user 40k split if entered
-    userfull (string): user full marathon finish time if entered
-    Returns:
-    updates the line graph
+    :param gender_ dash state: user's selection in the gender drop-down menu
+    :param age_ dash state: user's age group selection in age drop-down menu
+    :param user5k string: user 5k split if entered
+    :param user10k string: user 10k split if entered
+    :param user15k string: user 15k split if entered
+    :param user20k string: user 20k split if entered
+    :param userhalf string: user half marathon split if entered
+    :param user25k string: user 25k split if entered
+    :param user30k string: user 30k split if entered
+    :param user35k string: user 35k split if entered
+    :param user40k string: user 40k split if entered
+    :param userfull string: user full marathon finish time if entered
+    :return: updates the line graph
     """
     # subset the data based on user's age and gender selection
     subset = dash_functions.get_subset(df, age_, gender_)
@@ -302,23 +304,21 @@ def update_hist(
     """
     This function updates the histograms based on user's demographic selection
     and input half and full marathon times when the submit button is pressed.
-    Parameters:
-    n_clicks (dash state): introduces pressed-state of submit button to the
+    :param n_clicks dash state: introduces pressed-state of submit button to the
     function; must be passed as input or function will not update.
-    gender_ (dash state): user's selectio in the gender drop-down menu
-    age_ (dash state): user's age group selectio in age drop-down menu
-    user5k (string): user 5k split if entered
-    user10k (string): user 10k split if entered
-    user15k (string): user 15k split if entered
-    user20k (string): user 20k split if entered
-    userhalf (string): user half marathon split if entered
-    user25k (string): user 25k split if entered
-    user30k (string): user 30k split if entered
-    user35k (string): user 35k split if entered
-    user40k (string): user 40k split if entered
-    userfull (string): user full marathon finish time if entered
-    Returns:
-    updates the histogram
+    :param gender_ dash state: user's selection in the gender drop-down menu
+    :param age_ dash state: user's age group selection in age drop-down menu
+    :param user5k string: user 5k split if entered
+    :param user10k string: user 10k split if entered
+    :param user15k string: user 15k split if entered
+    :param user20k string: user 20k split if entered
+    :param userhalf string: user half marathon split if entered
+    :param user25k string: user 25k split if entered
+    :param user30k string: user 30k split if entered
+    :param user35k string: user 35k split if entered
+    :param user40k string: user 40k split if entered
+    :param userfull string: user full marathon finish time if entered
+    :return: updates the histogram
     """
     # subset the data based on user's age and gender selection
     subset = dash_functions.get_subset(df, age_, gender_)
@@ -410,6 +410,69 @@ def update_hist(
         ),
     }
 
+@app.callback(
+    Output("overall_pace", "children"),
+    [Input("submit-button", "n_clicks")],
+    [
+        State("5k-input", "value"),
+        State("10k-input", "value"),
+        State("15k-input", "value"),
+        State("20k-input", "value"),
+        State("half-input", "value"),
+        State("25k-input", "value"),
+        State("30k-input", "value"),
+        State("35k-input", "value"),
+        State("40k-input", "value"),
+        State("full-input", "value"),
+    ],
+)
+def update_table(
+    n_clicks,
+    user5k,
+    user10k,
+    user15k,
+    user20k,
+    userhalf,
+    user25k,
+    user30k,
+    user35k,
+    user40k,
+    userfull,
+):
+    """
+    This function updates the user's average pace based on any splits
+    the user has entered and displays it in a table.
+    :param n_clicks dash state: introduces pressed-state of submit button to the
+    function; must be passed as input or function will not update.
+    :param user5k string: user 5k split if entered
+    :param user10k string: user 10k split if entered
+    :param user15k string: user 15k split if entered
+    :param user20k string: user 20k split if entered
+    :param userhalf string: user half marathon split if entered
+    :param user25k string: user 25k split if entered
+    :param user30k string: user 30k split if entered
+    :param user35k string: user 35k split if entered
+    :param user40k string: user 40k split if entered
+    :param userfull string: user full marathon finish time if entered
+    :return: updates the user's pace
+    """
+    # create variables needed to interpret user's split data
+    user_paces = [
+        user5k,
+        user10k,
+        user15k,
+        user20k,
+        userhalf,
+        user25k,
+        user30k,
+        user35k,
+        user40k,
+        userfull,
+    ]
+    
+    # take user's splits as text input and return average overall pace
+    overall_pace = dash_functions.get_overall_pace(user_paces)
+    return("%s minutes/km" % (overall_pace))
 
 if __name__ == "__main__":
     app.run_server(debug=False)
