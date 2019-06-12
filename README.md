@@ -1,5 +1,10 @@
 [![Build Status](https://travis-ci.org/wfrierson/dashathon.svg?branch=master)](https://travis-ci.org/wfrierson/dashathon)
 
+## Usage Examples
+[![Usage Example 1](https://github.com/Chisquareatops/dashathon/blob/master/ex_1.png)]
+[![Usage Example 1](https://github.com/Chisquareatops/dashathon/blob/master/ex_2.png)]
+[![Usage Example 1](https://github.com/Chisquareatops/dashathon/blob/master/ex_3.png)]
+
 ### Organization of the project
 
 The project has the following structure:
@@ -28,5 +33,4 @@ dashathon/
   |- LICENSE
   |- requirements.txt
   
-  <h1>Usage Example</h1>
-  
+ 
