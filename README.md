@@ -27,3 +27,6 @@ dashathon/
   |- setup.py
   |- LICENSE
   |- requirements.txt
+  
+  <h1>Usage Example</h1>
+  
